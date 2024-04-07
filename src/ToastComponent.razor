@@ -1,0 +1,20 @@
+<div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        @* <img src="..." class="rounded me-2" alt="..."> *@
+        <strong class="me-auto">@Model.Title</strong>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="CloseToast"></button>
+    </div>
+    <div class="toast-body">
+        @Model.Message @Model.Id
+    </div>
+</div>
+
+@code {
+    [Parameter] public IToast ToastContainer { get; set; } = default!;
+    [Parameter] public ToastModel Model { get; set; } = default!;
+
+    private Task CloseToast()
+    {
+        return Task.CompletedTask;
+    }
+}

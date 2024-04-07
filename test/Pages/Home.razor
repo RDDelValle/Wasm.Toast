@@ -1,0 +1,18 @@
+﻿@page "/"
+
+<PageTitle>Wasm Toast</PageTitle>
+<h1>Wasm Toast</h1>
+
+<button class="btn btn-primary" @onclick="CreateToast">
+    Create Toast
+</button>
+
+@inject IToastManager ToastManager
+@code { 
+
+    private async Task CreateToast()
+    {
+        await ToastManager.CreateToastAsync("Cool Toast", "A cool message in a toast!");
+    }
+  
+}

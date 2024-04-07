@@ -1,0 +1,66 @@
+@if (Dictionary.Any())
+{
+    <div class="toast-container">
+        @foreach (var component in Dictionary.Reverse())
+        {
+            <ToastComponent Model="@component.Value" ToastContainer="@this"/>
+        }
+    </div>
+}
+
+@implements IDisposable
+@implements IToast
+@inject IToastManager ToastManager
+@inject IToastConfig ToastConfig
+
+@code {
+
+    private Dictionary<string, ToastModel> Dictionary { get; } = [];
+
+    protected override void OnInitialized()
+    {
+        ToastManager.OnCreateToast += HandleCreateToast;
+    }
+    
+    public async Task CloseToastAsync(string id)
+    {
+        if (!Dictionary.ContainsKey(id))
+            return;
+        // if (Dictionary.Count == 1)
+        // {
+        //     _hidingBackdrop = true;
+        //     await InvokeAsync(StateHasChanged);
+        //     await Task.Delay(300);
+        //     _hidingBackdrop = false;
+        //     _showBackdrop = false;
+        // }
+
+        Dictionary.Remove(id);
+        await InvokeAsync(StateHasChanged);
+    }
+    
+    private async void HandleCreateToast(object? sender, CreateToastEventArgs args)
+    {
+        Console.WriteLine(args.Model.Id);
+        if (Dictionary.ContainsKey(args.Model.Id))
+            return;
+        Dictionary.Add(args.Model.Id, args.Model);
+        await InvokeAsync(StateHasChanged);
+
+        // if (_showBackdrop)
+        //     return;
+        //
+        // _showingBackdrop = true;
+        // await InvokeAsync(StateHasChanged);
+        // _showBackdrop = true;
+        // await Task.Delay(300);
+        // _showingBackdrop = false;
+        // await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        ToastManager.OnCreateToast -= HandleCreateToast;
+    }
+}
+
